@@ -1,4 +1,4 @@
-﻿namespace RedisApiCache.Connection
+﻿namespace RedisApiCache.Model
 {
     public class ConfigFile
     {

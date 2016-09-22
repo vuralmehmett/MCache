@@ -57,10 +57,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Connection\ConfigFile.cs" />
-    <Compile Include="Connection\IConnectionManager.cs" />
-    <Compile Include="Connection\RedisConnection.cs" />
-    <Compile Include="Cacher\CacheAttribute.cs" />
+    <Compile Include="Model\ConfigFile.cs" />
+    <Compile Include="Abstract\ICacheManager.cs" />
+    <Compile Include="Manager\RedisManager.cs" />
+    <Compile Include="Attribute\CacheAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
