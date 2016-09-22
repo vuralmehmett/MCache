@@ -1,0 +1,38 @@
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using Newtonsoft.Json;
+using StackExchange.Redis;
+
+namespace RedisApiCache.Connection
+{
+    public class RedisConnection
+    {
+        private string host;
+        private string port;
+        public RedisConnection(string fileName = "redisconfig")
+        {
+            var r = new StreamReader(new FileStream(Directory.GetCurrentDirectory() + fileName + ".json", FileMode.Open));
+
+            var json = r.ReadToEnd();
+
+            var obj = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+
+            foreach (var value in obj.Values)
+            {
+                Debug.WriteLine(value);
+            }
+
+            r.Close();
+        }
+
+        //public void Connection()
+        //{
+        //    ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(host + ":" + port);
+        //    IDatabase db = redis.GetDatabase();
+
+        //    string inputValue = "Test 1";
+        //    db.StringSet("mykey", inputValue);
+        //}
+    }
+}

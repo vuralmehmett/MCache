@@ -1,17 +1,23 @@
 ﻿using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
-using RedisApiCache.CacheConnection;
+using RedisApiCache.Connection;
 
 namespace RedisApiCache.Cacher
 {
-    public class CacheAttribute : ActionFilterAttribute
+    public class Cache : ActionFilterAttribute
     {
+        private readonly string _fileName;
+
+        public Cache(string fileName="redisconfig")
+        {
+            _fileName = fileName;
+        }
+
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
             RedisConnection con = new RedisConnection();
 
             con.Connection();
-
 
             base.OnActionExecuting(actionContext);
         }
