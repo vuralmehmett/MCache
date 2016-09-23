@@ -61,6 +61,7 @@
     <Compile Include="Abstract\ICacheManager.cs" />
     <Compile Include="Manager\RedisManager.cs" />
     <Compile Include="Attribute\CacheAttribute.cs" />
+    <Compile Include="Utils\ConfigFileReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

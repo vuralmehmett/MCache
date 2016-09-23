@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using RedisApiCache.Abstract;
 using RedisApiCache.Model;
+using RedisApiCache.Utils;
 using StackExchange.Redis;
 
 namespace RedisApiCache.Manager
@@ -11,15 +12,7 @@ namespace RedisApiCache.Manager
         private readonly ConfigFile _configFile;
         public RedisManager(string fileName = "redisconfig")
         {
-            //consider to move another class
-            var appDomain = System.AppDomain.CurrentDomain;
-            var basePath = appDomain.BaseDirectory;
-            var filePath = Path.Combine(basePath + "/" + fileName + ".json");
-            var r = new StreamReader(new FileStream(filePath, FileMode.Open));
-            var json = r.ReadToEnd();
-            _configFile = JsonConvert.DeserializeObject<ConfigFile>(json);
-            r.Close();
-
+            _configFile = ConfigFileReader.ReadConfigFile(fileName);
         }
 
         public bool SetValue(string key, string value)

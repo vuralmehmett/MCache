@@ -1,30 +1,52 @@
-﻿using System.Web.Http.Controllers;
+﻿using System.Diagnostics;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RedisApiCache.Manager;
 
 namespace RedisApiCache.Attribute
 {
     public class CacheAttribute : ActionFilterAttribute
     {
-        private readonly string _fileName;
-
-        public CacheAttribute(string fileName = "redisconfig")
-        {
-            _fileName = fileName;
-        }
+        private static readonly RedisManager Rm = new RedisManager();
 
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
-            RedisManager rm = new RedisManager();
+            var key = actionContext.Request.RequestUri + "-" + actionContext.Request.Method.Method;
+            var cachedResponse = Rm.GetValue(key);
 
-            rm.SetValue("myKey", "test1");
-            rm.GetValue("myKey");
+            if (!string.IsNullOrEmpty(cachedResponse))
+            {
+                
+                actionContext.Response = new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.NotModified,
+                    Content = new StringContent(cachedResponse, Encoding.UTF8, "application/json")
+                };
+
+                return;
+            }
 
             base.OnActionExecuting(actionContext);
         }
 
-        public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
+        public override async void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
+            string response = await actionExecutedContext.Response.Content.ReadAsStringAsync();
+            var isSet = Rm.SetValue(actionExecutedContext.Request.RequestUri + "-" + actionExecutedContext.Request.Method.Method,
+               response);
+
+            if (!isSet)
+            {
+                Debug.WriteLine("sorun var");
+            }
+
             base.OnActionExecuted(actionExecutedContext);
         }
     }

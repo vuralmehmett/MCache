@@ -1,7 +1,9 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using RedisApiCache.Attribute;
+using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
@@ -11,7 +13,49 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public HttpResponseMessage Method()
         {
-            return new HttpResponseMessage(HttpStatusCode.Accepted);
+
+            List<FakeModel> fakeModels = new List<FakeModel>
+            {
+                new FakeModel
+                {
+                    Name = "test",
+                    Surname = "test"
+                },
+                 new FakeModel
+                {
+                    Name = "test",
+                    Surname = "test"
+                },
+                  new FakeModel
+                {
+                    Name = "test",
+                    Surname = "test"
+                },
+                   new FakeModel
+                {
+                    Name = "test",
+                    Surname = "test"
+                },
+                    new FakeModel
+                {
+                    Name = "test",
+                    Surname = "test"
+                },
+                     new FakeModel
+                {
+                    Name = "test",
+                    Surname = "test"
+                },
+                      new FakeModel
+                {
+                    Name = "test",
+                    Surname = "test"
+                },
+            };
+
+
+
+            return Request.CreateResponse(HttpStatusCode.OK, fakeModels);
         }
     }
 }
