@@ -18,16 +18,17 @@ namespace RedisApiCache.Attribute
 
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
-            var key = actionContext.Request.RequestUri + "-" + actionContext.Request.Method.Method;
+            var etag = actionContext.Request.Headers.IfNoneMatch.ToString().Replace("\"", string.Empty);
+            var key = actionContext.Request.RequestUri.PathAndQuery + "-" + actionContext.Request.Method.Method + "-" + etag;
+
             var cachedResponse = Rm.GetValue(key);
 
             if (!string.IsNullOrEmpty(cachedResponse))
             {
-                
+
                 actionContext.Response = new HttpResponseMessage
                 {
-                    StatusCode = HttpStatusCode.NotModified,
-                    Content = new StringContent(cachedResponse, Encoding.UTF8, "application/json")
+                    StatusCode = HttpStatusCode.NotModified
                 };
 
                 return;
@@ -39,7 +40,9 @@ namespace RedisApiCache.Attribute
         public override async void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
             string response = await actionExecutedContext.Response.Content.ReadAsStringAsync();
-            var isSet = Rm.SetValue(actionExecutedContext.Request.RequestUri + "-" + actionExecutedContext.Request.Method.Method,
+            var etag = actionExecutedContext.Response.Headers.ETag.Tag.Replace("\"", string.Empty);
+
+            var isSet = Rm.SetValue(actionExecutedContext.Request.RequestUri.PathAndQuery + "-" + actionExecutedContext.Request.Method.Method + "-" + etag,
                response);
 
             if (!isSet)

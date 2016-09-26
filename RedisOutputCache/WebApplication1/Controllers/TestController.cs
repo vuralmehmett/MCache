@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web.Http;
 using RedisApiCache.Attribute;
 using WebApplication1.Models;
@@ -53,9 +55,10 @@ namespace WebApplication1.Controllers
                 },
             };
 
+            var response = Request.CreateResponse(HttpStatusCode.OK, fakeModels);
+            response.Headers.ETag = new EntityTagHeaderValue("\"" + Guid.NewGuid().ToString().Replace("-", string.Empty) + "\"");
 
-
-            return Request.CreateResponse(HttpStatusCode.OK, fakeModels);
+            return response;
         }
     }
 }
