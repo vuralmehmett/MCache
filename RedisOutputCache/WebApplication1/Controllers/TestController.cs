@@ -56,8 +56,6 @@ namespace WebApplication1.Controllers
             };
 
             var response = Request.CreateResponse(HttpStatusCode.OK, fakeModels);
-            response.Headers.ETag = new EntityTagHeaderValue("\"" + Guid.NewGuid().ToString().Replace("-", string.Empty) + "\"");
-
             return response;
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
@@ -39,8 +40,9 @@ namespace RedisApiCache.Attribute
 
         public override async void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
+            var etag = new EntityTagHeaderValue("\"" + Guid.NewGuid().ToString().Replace("-", string.Empty) + "\"");
             string response = await actionExecutedContext.Response.Content.ReadAsStringAsync();
-            var etag = actionExecutedContext.Response.Headers.ETag.Tag.Replace("\"", string.Empty);
+            actionExecutedContext.Response.Headers.ETag = etag;
 
             var isSet = Rm.SetValue(actionExecutedContext.Request.RequestUri.PathAndQuery + "-" + actionExecutedContext.Request.Method.Method + "-" + etag,
                response);
