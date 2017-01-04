@@ -11,7 +11,6 @@ namespace WebApplication1.Controllers
 {
     public class TestController : ApiController
     {
-        [Cache]
         [HttpGet]
         public HttpResponseMessage Method()
         {
